@@ -1,5 +1,5 @@
 import { useGetUserData } from "@/api/useGetUserData";
-import { useSpotifyAuthCall } from "@/api/useSpotifyAuthCall";
+import { useSpotifyAuthCall } from "@/hooks/useSpotifyAuthCall";
 import { Button } from "./ui/button";
 
 const AuthBtn = () => {

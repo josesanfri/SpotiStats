@@ -1,7 +1,6 @@
 'use client';
 
 import { useEffect, useCallback } from "react";
-import { useSearchParams } from "next/navigation";
 import axios from "axios";
 import { setAccessToken, setRefreshToken, clearAccessToken } from "@/api/authToken";
 
@@ -9,7 +8,6 @@ import { setAccessToken, setRefreshToken, clearAccessToken } from "@/api/authTok
 const SPOTIFY_LOGIN_URL = `https://accounts.spotify.com/authorize?client_id=${process.env.NEXT_PUBLIC_CLIENT_ID || ''}&response_type=code&redirect_uri=${encodeURIComponent(process.env.NEXT_PUBLIC_REDIRECT_URI || '')}&scope=${encodeURIComponent(process.env.NEXT_PUBLIC_SCOPES || '')}`;
 
 export const useSpotifyAuthCall = () => {
-    const searchParams = useSearchParams();
 
     // Función para autenticar al usuario con el código recibido
     const autenticateUser = useCallback(async (spotyCode: string) => {
@@ -35,13 +33,13 @@ export const useSpotifyAuthCall = () => {
 
     // Manejo de la autenticación después de recibir el code de Spotify
     useEffect(() => {
-        const urlParams = new URLSearchParams(searchParams.toString());
+        const urlParams = new URLSearchParams(window.location.search);
         const spotyCode = urlParams.get("code");
 
         if (spotyCode) {
             autenticateUser(spotyCode);
         }
-    }, [searchParams, autenticateUser]);
+    }, [autenticateUser]);
 
     // Función para realizar el login (redirigir al usuario a Spotify)
     const login = () => {
