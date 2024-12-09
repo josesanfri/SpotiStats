@@ -1,14 +1,14 @@
-import { useGetUserData } from "@/api/useGetUserData";
+import { useGetUser } from "@/hooks/useGetUser";
 import { useSpotifyAuthCall } from "@/hooks/useSpotifyAuthCall";
 import { Button } from "./ui/button";
 
 const AuthBtn = () => {
     const { login, logout } = useSpotifyAuthCall();
-    const { dataUserProfile } = useGetUserData();
+    const { data } = useGetUser();
 
     return (
         <div>
-            {dataUserProfile ? (
+            {data ? (
                 <Button onClick={logout}>Logout</Button>
             ) : (
                 <Button onClick={login}>Login</Button>

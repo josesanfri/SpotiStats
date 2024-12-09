@@ -13,7 +13,9 @@ const Header = () => {
                     <Image
                         src={"/images/logo.webp"}
                         alt="SpotiStats"
-                        className="mr-1 w-8 h-8"
+                        className="mr-1 w-8 h-8 object-contain"
+                        width={500}
+                        height={500}
                     />
                 </Link>
             </h1>

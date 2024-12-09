@@ -1,9 +1,5 @@
-/* eslint-disable @next/next/no-img-element */
-'use client';
+"use client";
 import { useState, useEffect } from "react";
-import { useGetArtistsShortTerm } from "@/api/artist/useGetArtistsShortTerm";
-import { useGetArtistsMediumTerm } from "@/api/artist/useGetArtistsMediumTerm";
-import { useGetArtistsLongTerm } from "@/api/artist/useGetArtistsLongTerm";
 import {
     Table,
     TableBody,
@@ -11,111 +7,105 @@ import {
     TableCell,
     TableRow,
 } from "@/components/ui/table";
-import { Button } from "@/components/ui/button";
+import { useGetArtists } from "@/hooks/useGetArtists";
 import { Info } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
+import { ArtistType } from "@/types/artist";
 import { SkeletonTable } from "@/components/skeleton-table";
+import TimeRangeSelector from "@/components/time-range-selector";
 
-const GenreTable = () =>  {
-    const [timeRange, setTimeRange] = useState<'short' | 'medium' | 'long'>('short');
+const GenreTable = () => {
+    const [timeRange, setTimeRange] = useState<
+        "short_term" | "medium_term" | "long_term"
+    >("short_term");
+    const [genreData, setGenreData] = useState<
+        { genre: string; count: number }[]
+    >([]);
+    const [maxCount, setMaxCount] = useState<number>(0);
 
-    const { dataArtistsShortTerm, loadingShort } = useGetArtistsShortTerm();
-    const { dataArtistsMediumTerm, loadingMedium } = useGetArtistsMediumTerm();
-    const { dataArtistsLongTerm, loadingLong } = useGetArtistsLongTerm();
-    const [maxCount, setMaxCount] = useState<number>(0); // Máximo para normalizar
+    const { data, loading, error } = useGetArtists(timeRange);
 
-    const getDataByTimeRange = () => {
-        switch (timeRange) {
-            case 'short':
-                return { data: dataArtistsShortTerm, loading: loadingShort };
-            case 'medium':
-                return { data: dataArtistsMediumTerm, loading: loadingMedium };
-            case 'long':
-                return { data: dataArtistsLongTerm, loading: loadingLong };
-            default:
-                return { data: null, loading: true };
-        }
-    };
-
-    const { data, loading } = getDataByTimeRange();
-
+    // Calculate genre when data is loaded
     useEffect(() => {
         if (!loading && data) {
-            const genreCount: { [key: string]: number } = {};
+            const genreCounts = getGenreCounts(data.items);
+            setGenreData(genreCounts);
 
-            // Contar cuántas veces aparece cada género
-            data.items.forEach((artist) => {
-                artist.genres.forEach((genre: string) => {
-                    genreCount[genre] = (genreCount[genre] || 0) + 1;
-                });
-            });
-
-            // Calcular el máximo para normalizar las barras de progreso
-            setMaxCount(Math.max(...Object.values(genreCount)));
+            const max = Math.max(...genreCounts.map((item) => item.count));
+            setMaxCount(max);
         }
     }, [loading, data]);
 
-    const renderTableRows = () => {
-        const genreCount: { [key: string]: number } = {};
+    // Count Genres
+    const getGenreCounts = (artists: ArtistType["items"]) => {
+        const genreCountMap: { [key: string]: number } = {};
 
-        if (data) {
-            // Contar los géneros
-            data.items.forEach((artist) => {
-                artist.genres.forEach((genre: string) => {
-                    genreCount[genre] = (genreCount[genre] || 0) + 1;
-                });
+        artists.forEach((artist) => {
+            artist.genres.forEach((genre) => {
+                genreCountMap[genre] = (genreCountMap[genre] || 0) + 1;
             });
+        });
 
-            // Ordenar géneros por popularidad
-            const sortedGenres = Object.keys(genreCount)
-                .map((genre) => ({ genre, count: genreCount[genre] }))
-                .sort((a, b) => b.count - a.count);
+        return Object.entries(genreCountMap)
+            .map(([genre, count]) => ({ genre, count }))
+            .sort((a, b) => b.count - a.count);
+    };
 
-            return sortedGenres.map((genre, index) => (
-                <TableRow key={index}>
-                    <TableCell className="w-2/5"><span className="font-bold">{index + 1}.</span> {genre.genre}</TableCell>
-                    <TableCell className="w-3/5">
-                        <Progress
-                            value={(genre.count / maxCount) * 100}
-                            className="h-4 w-full bg-gray-200 dark:bg-gray-700"
-                        />
-                    </TableCell>
-                </TableRow>
-            ));
-        }
-
-        return null;
+    const generateTableRows = () => {
+        return genreData.map((genre, index) => (
+            <TableRow key={index}>
+                <TableCell className="w-2/5">
+                    <span className="font-bold">{index + 1}.</span>{" "}
+                    {genre.genre}
+                </TableCell>
+                <TableCell className="w-3/5">
+                    <Progress
+                        value={(genre.count / maxCount) * 100}
+                        aria-label={`${genre.count} tracks`}
+                        className="h-4 w-full bg-gray-200 dark:bg-gray-700"
+                    />
+                </TableCell>
+            </TableRow>
+        ));
     };
 
     return (
         <section className="p-4 mx-auto sm:max-w-4xl md:max-w-6xl">
-            <section>
-                <h1 className="text-2xl sm:text-3xl font-bold">Top Genres</h1>
-                <div className="flex gap-4 sm:space-x-4 mt-4 flex-col sm:flex-row">
-                    <Button className="w-full" onClick={() => setTimeRange('short')}>Last Month</Button>
-                    <Button className="w-full" onClick={() => setTimeRange('medium')}>Last 6 Months</Button>
-                    <Button className="w-full" onClick={() => setTimeRange('long')}>Last Year</Button>
-                </div>
-            </section>
-
             {!loading && data && (
-                <Table className="mt-3">
-                    <TableCaption>
-                        <p className="flex items-center place-content-center text-xs gap-2 px-4">
-                            <Info className="h-4 w-4" />
-                            Checkout your most listened genres.
-                        </p>
-                    </TableCaption>
-                    <TableBody>
-                        {renderTableRows()}
-                    </TableBody>
-                </Table>
+                <>
+                    <section>
+                        <h1 className="text-2xl sm:text-3xl font-bold">
+                            Top Genres -{" "}
+                            {
+                                {
+                                    short_term: "Last Month",
+                                    medium_term: "Last 6 Months",
+                                    long_term: "Last Year",
+                                }[timeRange]
+                            }
+                        </h1>
+                        <TimeRangeSelector
+                            timeRange={timeRange}
+                            onTimeRangeChange={setTimeRange}
+                        />
+                    </section>
+                    <Table className="mt-3">
+                        <TableCaption>
+                            <p className="flex items-center place-content-center text-xs gap-2 px-4">
+                                <Info className="h-4 w-4" />
+                                Checkout your most listened genres.
+                            </p>
+                        </TableCaption>
+                        <TableBody>{generateTableRows()}</TableBody>
+                    </Table>
+                </>
             )}
-            {loading && 
-                <section className="mt-3">
-                    <SkeletonTable />
-                </section>
-            }
+            {loading && (
+                <SkeletonTable />
+            )}
+            {error && (
+                <p className="text-red-500 text-center mt-4">Error: {error}</p>
+            )}
         </section>
     );
 };

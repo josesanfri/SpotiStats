@@ -2,7 +2,7 @@
 
 import { useEffect, useCallback } from "react";
 import axios from "axios";
-import { setAccessToken, setRefreshToken, clearAccessToken } from "@/api/authToken";
+import { setAccessToken, setRefreshToken, clearAccessToken } from "@/lib/authToken";
 
 // URL para el login de Spotify
 const SPOTIFY_LOGIN_URL = `https://accounts.spotify.com/authorize?client_id=${process.env.NEXT_PUBLIC_CLIENT_ID || ''}&response_type=code&redirect_uri=${encodeURIComponent(process.env.NEXT_PUBLIC_REDIRECT_URI || '')}&scope=${encodeURIComponent(process.env.NEXT_PUBLIC_SCOPES || '')}`;

@@ -1,5 +1,5 @@
 'use client';
-import { useGetUserData } from "@/api/useGetUserData";
+import { useGetUser } from "@/hooks/useGetUser";
 import { Button } from "@/components/ui/button"
 import {
   Card,
@@ -12,7 +12,7 @@ import Link from "next/link";
 import AuthBtn from "./auth-btn";
 
 const HomeCard = () => {
-    const { dataUserProfile } = useGetUserData();
+    const { data } = useGetUser();
     return (
         <section className="p-4 mx-auto sm:max-w-4xl md:max-w-6xl">
             <Card className="items-center bg-neutral-400 dark:bg-neutral-900 text-center flex flex-col">
@@ -21,7 +21,7 @@ const HomeCard = () => {
                     <CardDescription className="text-black dark:text-white">Choose what you want to see</CardDescription>
                 </CardHeader>
                 <CardContent>
-                    {dataUserProfile ? (
+                    {data ? (
                         <div className="grid w-full items-center gap-4">
                             <Button variant="outline">
                                 <Link href={'/track'}>
