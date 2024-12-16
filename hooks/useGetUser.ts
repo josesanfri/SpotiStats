@@ -28,15 +28,15 @@ export function useGetUser() {
                     }
                 );
 
-                localStorage.setItem("user_id", response.data.id);
                 setData(response.data);
             } catch (error) {
-                const errorMessage = axios.isAxiosError(error)
+                /*const errorMessage = axios.isAxiosError(error)
                     ? error.response?.data?.error?.message ||
                       "Error getting data"
                     : "Unexpected error getting profile data";
 
-                setError(errorMessage);
+                setError(errorMessage);*/
+                console.error("Error getting user data", error);
             } finally {
                 setLoading(false);
             }

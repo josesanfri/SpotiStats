@@ -1,37 +1,44 @@
-'use client';
-
-import { useEffect, useCallback } from "react";
+import { useCallback, useEffect } from "react";
 import axios from "axios";
 import { setAccessToken, setRefreshToken, clearAccessToken } from "@/lib/authToken";
 
-// URL para el login de Spotify
 const SPOTIFY_LOGIN_URL = `https://accounts.spotify.com/authorize?client_id=${process.env.NEXT_PUBLIC_CLIENT_ID || ''}&response_type=code&redirect_uri=${encodeURIComponent(process.env.NEXT_PUBLIC_REDIRECT_URI || '')}&scope=${encodeURIComponent(process.env.NEXT_PUBLIC_SCOPES || '')}`;
 
 export const useSpotifyAuthCall = () => {
-
     // Función para autenticar al usuario con el código recibido
     const autenticateUser = useCallback(async (spotyCode: string) => {
         try {
-            const base64String = Buffer.from(`${process.env.NEXT_PUBLIC_CLIENT_ID}:${process.env.NEXT_PUBLIC_CLIENT_SECRET}`).toString('base64');
             const searchParams = new URLSearchParams({
                 code: spotyCode,
-                grant_type: "authorization_code",
                 redirect_uri: process.env.NEXT_PUBLIC_REDIRECT_URI || "",
+                grant_type: "authorization_code",
             });
 
-            const res = await axios.post("https://accounts.spotify.com/api/token", searchParams, {
-                headers: {
-                    "Content-Type": "application/x-www-form-urlencoded",
-                    'Authorization': 'Basic ' + base64String,
-                },
-            });
-            
+            const base64String = btoa(
+                `${process.env.NEXT_PUBLIC_CLIENT_ID}:${process.env.NEXT_PUBLIC_CLIENT_SECRET}`
+            );
+
+            const res = await axios.post(
+                "https://accounts.spotify.com/api/token",
+                searchParams.toString(),
+                {
+                    headers: {
+                        "Content-Type": "application/x-www-form-urlencoded",
+                        Authorization: `Basic ${base64String}`,
+                    },
+                }
+            );
+
             setAccessToken(res.data.access_token);
             setRefreshToken(res.data.refresh_token);
-            
-            window.location.reload();
+
+            const url = new URL(window.location.href);
+            url.searchParams.delete("code");
+            window.location.replace(url.toString());
         } catch (error) {
             console.error("Error during user authentication", error);
+        } finally {
+            window.history.replaceState({}, document.title, "/");
         }
     }, []);
 
