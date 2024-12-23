@@ -1,15 +1,10 @@
 import axios from 'axios';
 
 export const getAccessToken = (): string | null => {
-    if (typeof window === "undefined") {
-        console.error("localStorage is not available on the server");
-        return null;
-    }
 
     const accessToken = localStorage.getItem("access_token");
 
     if (!accessToken) {
-        console.error("Access token is missing");
         return null;
     }
 

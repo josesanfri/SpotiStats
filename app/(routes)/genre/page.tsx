@@ -1,5 +1,7 @@
+import { Suspense } from "react";
 import GenreTable from "./components/genre-table";
-import { Metadata } from 'next';
+import Fallback from "@/components/ui/fallback";
+import { Metadata } from "next";
 
 export const metadata: Metadata = {
     title: "Top Genres - SpotiStats",
@@ -7,9 +9,11 @@ export const metadata: Metadata = {
 };
 
 export default function Page() {
-    return(
+    return (
         <main>
-            <GenreTable />
+            <Suspense fallback={<Fallback />}>
+                <GenreTable />
+            </Suspense>
         </main>
-    )
+    );
 }

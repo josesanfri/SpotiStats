@@ -1,5 +1,7 @@
+import { Suspense } from "react";
+import Fallback from "@/components/ui/fallback";
 import TracksTable from "./components/tracks-table";
-import { Metadata } from 'next';
+import { Metadata } from "next";
 
 export const metadata: Metadata = {
     title: "Top Tracks - SpotiStats",
@@ -7,9 +9,11 @@ export const metadata: Metadata = {
 };
 
 export default function Page() {
-    return(
+    return (
         <main>
-            <TracksTable />
+            <Suspense fallback={<Fallback />}>
+                <TracksTable />
+            </Suspense>
         </main>
-    )
+    );
 }
