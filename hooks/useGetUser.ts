@@ -1,66 +1,36 @@
 "use client";
-import { useEffect, useState } from "react";
+
+import useSWR from "swr";
 import axios from "axios";
 import { SpotifyUserType } from "@/types/spotifyUser";
-import { getAccessToken } from "@/lib/authToken";
+import { getAccessToken } from "@/lib/authCookies";
+
+// Fetcher genérico para solicitudes autenticadas
+const fetcher = async (url: string) => {
+    const token = getAccessToken();
+
+    if (!token) {
+        throw new Error("Login required to fetch data");
+    }
+
+    const response = await axios.get(url, {
+        headers: {
+            Authorization: `Bearer ${token}`,
+        },
+    });
+
+    return response.data;
+};
 
 export function useGetUser() {
-    const [data, setData] = useState<SpotifyUserType | null>(null);
-    const [loading, setLoading] = useState<boolean>(true);
-    const [error, setError] = useState<string>("");
+    const { data, error, isLoading } = useSWR<SpotifyUserType>(
+        `https://api.spotify.com/v1/me`,
+        fetcher
+    );
 
-    useEffect(() => {
-        const fetchUserData = async (token: string) => {
-            if (!token) {
-                setError("Login for getting data");
-                setLoading(false);
-                return;
-            }
-
-            try {
-                setLoading(true);
-                const response = await axios.get(
-                    `https://api.spotify.com/v1/me`,
-                    {
-                        headers: {
-                            Authorization: `Bearer ${token}`,
-                        },
-                    }
-                );
-
-                setData(response.data);
-            } catch (error) {
-                /*const errorMessage = axios.isAxiosError(error)
-                    ? error.response?.data?.error?.message ||
-                      "Error getting data"
-                    : "Unexpected error getting profile data";
-
-                setError(errorMessage);*/
-                console.error("Error getting user data", error);
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        // Función para detectar cambios en localStorage
-        const handleTokenChange = () => {
-            const token = getAccessToken();
-            if (token) {
-                setLoading(true);
-                fetchUserData(token);
-            }
-        };
-
-        // Verifica el token inicial al cargar
-        handleTokenChange();
-
-        // Escucha cambios en el storage
-        window.addEventListener("storage", handleTokenChange);
-
-        return () => {
-            window.removeEventListener("storage", handleTokenChange);
-        };
-    }, []);
-
-    return { data, loading, error };
+    return {
+        data,
+        error: error ? error.message : null,
+        loading: isLoading,
+    };
 }

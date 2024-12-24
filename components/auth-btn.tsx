@@ -1,3 +1,4 @@
+"use client"
 import { useGetUser } from "@/hooks/useGetUser";
 import { useSpotifyAuthCall } from "@/hooks/useSpotifyAuthCall";
 import { Button } from "./ui/button";

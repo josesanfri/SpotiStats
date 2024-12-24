@@ -1,12 +1,21 @@
+"use client";
+
 import { useCallback, useEffect } from "react";
 import axios from "axios";
-import { setAccessToken, setRefreshToken, clearAccessToken } from "@/lib/authToken";
+import {
+    setAccessToken,
+    setRefreshToken,
+    clearAccessToken,
+} from "@/lib/authCookies";
 
-const SPOTIFY_LOGIN_URL = `https://accounts.spotify.com/authorize?client_id=${process.env.NEXT_PUBLIC_CLIENT_ID || ''}&response_type=code&redirect_uri=${encodeURIComponent(process.env.NEXT_PUBLIC_REDIRECT_URI || '')}&scope=${encodeURIComponent(process.env.NEXT_PUBLIC_SCOPES || '')}`;
+const SPOTIFY_LOGIN_URL = `https://accounts.spotify.com/authorize?client_id=${
+    process.env.NEXT_PUBLIC_CLIENT_ID || ""
+}&response_type=code&redirect_uri=${encodeURIComponent(
+    process.env.NEXT_PUBLIC_REDIRECT_URI || ""
+)}&scope=${encodeURIComponent(process.env.NEXT_PUBLIC_SCOPES || "")}`;
 
 export const useSpotifyAuthCall = () => {
-    // Función para autenticar al usuario con el código recibido
-    const autenticateUser = useCallback(async (spotyCode: string) => {
+    const authenticateUser = useCallback(async (spotyCode: string) => {
         try {
             const searchParams = new URLSearchParams({
                 code: spotyCode,
@@ -18,7 +27,7 @@ export const useSpotifyAuthCall = () => {
                 `${process.env.NEXT_PUBLIC_CLIENT_ID}:${process.env.NEXT_PUBLIC_CLIENT_SECRET}`
             );
 
-            const res = await axios.post(
+            const response = await axios.post(
                 "https://accounts.spotify.com/api/token",
                 searchParams.toString(),
                 {
@@ -29,8 +38,8 @@ export const useSpotifyAuthCall = () => {
                 }
             );
 
-            setAccessToken(res.data.access_token);
-            setRefreshToken(res.data.refresh_token);
+            setAccessToken(response.data.access_token);
+            setRefreshToken(response.data.refresh_token);
 
             const url = new URL(window.location.href);
             url.searchParams.delete("code");
@@ -42,22 +51,19 @@ export const useSpotifyAuthCall = () => {
         }
     }, []);
 
-    // Manejo de la autenticación después de recibir el code de Spotify
     useEffect(() => {
         const urlParams = new URLSearchParams(window.location.search);
         const spotyCode = urlParams.get("code");
 
         if (spotyCode) {
-            autenticateUser(spotyCode);
+            authenticateUser(spotyCode);
         }
-    }, [autenticateUser]);
+    }, [authenticateUser]);
 
-    // Función para realizar el login (redirigir al usuario a Spotify)
     const login = () => {
         window.location.replace(SPOTIFY_LOGIN_URL);
     };
 
-    // Función para realizar el logout
     const logout = () => {
         clearAccessToken();
         window.location.reload();

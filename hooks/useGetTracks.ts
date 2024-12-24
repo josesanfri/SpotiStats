@@ -1,50 +1,38 @@
-import { useEffect, useState } from "react";
+"use client";
+
+import useSWR from "swr";
 import axios from "axios";
 import { TrackType } from "@/types/track";
-import { getAccessToken } from "@/lib/authToken";
+import { getAccessToken } from "@/lib/authCookies";
+
+// Fetcher genérico para solicitudes autenticadas
+const fetcher = async (url: string) => {
+    const token = getAccessToken();
+
+    if (!token) {
+        throw new Error("Login required to fetch data");
+    }
+
+    const response = await axios.get(url, {
+        headers: {
+            Authorization: `Bearer ${token}`,
+        },
+    });
+
+    return response.data;
+};
 
 export function useGetTracks(
     timeRange: "short_term" | "medium_term" | "long_term"
 ) {
-    const [data, setData] = useState<TrackType | null>(null);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState("");
+    const { data, error, isLoading } = useSWR<TrackType>(
+        `https://api.spotify.com/v1/me/top/tracks?time_range=${timeRange}&limit=20&offset=0`,
+        fetcher
+    );
 
-    useEffect(() => {
-        const token = getAccessToken();
-
-        if (!token) {
-            setError("Login for getting data");
-            setLoading(false);
-            return;
-        }
-
-        const fetchTracks = async () => {
-            setLoading(true);
-            try {
-                const response = await axios.get(
-                    `https://api.spotify.com/v1/me/top/tracks?time_range=${timeRange}&limit=20&offset=0`,
-                    {
-                        headers: {
-                            Authorization: `Bearer ${token}`,
-                        },
-                    }
-                );
-                setData(response.data);
-            } catch (error) {
-                const errorMessage = axios.isAxiosError(error)
-                    ? error.response?.data?.error?.message ||
-                      "Error getting data"
-                    : "Unexpected error getting profile data";
-
-                setError(errorMessage);
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        fetchTracks();
-    }, [timeRange]);
-
-    return { data, loading, error };
+    return {
+        data,
+        error: error ? error.message : null,
+        loading: isLoading,
+    };
 }
