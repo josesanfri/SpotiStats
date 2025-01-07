@@ -67,7 +67,7 @@ const ArtistTable = () => {
                                         >
                                             <div className="flex flex-col items-center gap-2">
                                                 <Image
-                                                    className="w-16 h-16 rounded-full object-contain"
+                                                    className="w-16 h-16 object-contain"
                                                     src={artist.images[0].url}
                                                     alt={artist.name + index}
                                                     width={500}
