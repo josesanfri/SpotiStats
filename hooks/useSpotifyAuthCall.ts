@@ -1,5 +1,4 @@
 "use client";
-
 import { useCallback, useEffect } from "react";
 import axios from "axios";
 import {
@@ -41,13 +40,9 @@ export const useSpotifyAuthCall = () => {
             setAccessToken(response.data.access_token);
             setRefreshToken(response.data.refresh_token);
 
-            const url = new URL(window.location.href);
-            url.searchParams.delete("code");
-            window.location.replace(url.toString());
+            window.location.replace("/profile");
         } catch (error) {
             console.error("Error during user authentication", error);
-        } finally {
-            window.history.replaceState({}, document.title, "/");
         }
     }, []);
 

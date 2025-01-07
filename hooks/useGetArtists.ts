@@ -1,5 +1,3 @@
-"use client";
-
 import useSWR from "swr";
 import axios from "axios";
 import { ArtistType } from "@/types/artist";
@@ -32,6 +30,19 @@ export function useGetArtists(
 
     return {
         data,
+        error: error ? error.message : null,
+        loading: isLoading,
+    };
+}
+
+export function useGetTopArtist() {
+    const { data, error, isLoading } = useSWR<ArtistType>(
+        `https://api.spotify.com/v1/me/top/artists?time_range=short_term&limit=20&offset=0`,
+        fetcher
+    );
+
+    return {
+        data: data?.items[0],
         error: error ? error.message : null,
         loading: isLoading,
     };

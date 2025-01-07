@@ -1,9 +1,9 @@
+
 import useSWR from "swr";
 import axios from "axios";
-import { SpotifyUserType } from "@/types/spotifyUser";
+import { RecentlyPlayedType } from "@/types/track";
 import { getAccessToken } from "@/lib/authCookies";
 
-// Fetcher genérico para solicitudes autenticadas
 const fetcher = async (url: string) => {
     const token = getAccessToken();
 
@@ -20,9 +20,9 @@ const fetcher = async (url: string) => {
     return response.data;
 };
 
-export function useGetUser() {
-    const { data, error, isLoading } = useSWR<SpotifyUserType>(
-        `https://api.spotify.com/v1/me`,
+export function useGetRecentlyPlayed() {
+    const { data, error, isLoading } = useSWR<RecentlyPlayedType>(
+        `https://api.spotify.com/v1/me/player/recently-played?limit=20`,
         fetcher
     );
 

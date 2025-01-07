@@ -17,7 +17,7 @@ const TimeRangeSelector: React.FC<TimeRangeSelectorProps> = ({
                 onClick={() => onTimeRangeChange("short_term")}
                 className={
                     `w-full ${
-                        timeRange === "short_term" ? "border-green-500" : ""
+                        timeRange === "short_term" ? "border-green-500 border-2" : ""
                     }`
                 }
             >
@@ -27,7 +27,7 @@ const TimeRangeSelector: React.FC<TimeRangeSelectorProps> = ({
                 onClick={() => onTimeRangeChange("medium_term")}
                 className={
                     `w-full ${
-                        timeRange === "medium_term" ? "border-green-500" : ""
+                        timeRange === "medium_term" ? "border-green-500 border-2" : ""
                     }`
                 }
             >
@@ -37,7 +37,7 @@ const TimeRangeSelector: React.FC<TimeRangeSelectorProps> = ({
                 onClick={() => onTimeRangeChange("long_term")}
                 className={
                     `w-full ${
-                        timeRange === "long_term" ? "border-green-500" : ""
+                        timeRange === "long_term" ? "border-green-500 border-2" : ""
                     }`
                 }
             >

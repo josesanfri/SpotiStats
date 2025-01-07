@@ -6,6 +6,10 @@ export type SpotifyUserType = {
     external_urls: {
         spotify: string;
     };
+    followers: {
+        href: string;
+        total: number;
+    },
     href: string;
     product: string;
     type: string;

@@ -27,3 +27,37 @@ export type TrackType = {
         }
     }[];
 };
+
+export interface RecentlyPlayedType {
+    items: {
+        played_at: string;
+        context: {
+            external_urls: {
+                spotify: string;
+            };
+            href: string;
+            type: string;
+            uri: string;
+        },
+        track: {
+            id: string;
+            href: string;
+            name: string;
+            duration_ms: number;
+            artists: {
+                id: string;
+                name: string;
+                type: string;
+                uri: string;
+                href: string;
+            }[];
+            album: {
+                images: {
+                    url: string;
+                    height: number;
+                    width: number;
+                }[];
+            }
+        }
+    }[];
+}

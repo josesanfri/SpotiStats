@@ -1,5 +1,7 @@
-import HomeCard from "@/components/home-card";
-import HomeInfo from "@/components/home-info";
+import HomeCta from "@/components/home/home-cta";
+import HomeFeatures from "@/components/home/home-features";
+import HomeHero from "@/components/home/home-hero";
+import HowItWorks from "@/components/home/how-it-works";
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -10,8 +12,10 @@ export const metadata: Metadata = {
 export default function Home() {
   return (
     <main>
-      <HomeCard />
-      <HomeInfo />
+      <HomeHero />
+      <HomeFeatures />
+      <HowItWorks />
+      <HomeCta />
     </main>
   );
 }
