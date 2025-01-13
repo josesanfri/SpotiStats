@@ -49,7 +49,7 @@ pnpm install
 
 4. Create a **.env** file with the following content:
 
-> 🚧 The environment variables must match the following [schema](https://github.com/pheralb/slug/blob/main/src/env/schema.mjs#L8).
+> 🚧 The environment variables must match the following schema.
 
 ```bash
 # Next variables =>
