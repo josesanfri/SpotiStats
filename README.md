@@ -1,36 +1,75 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+## 👨‍🚀 Introduction
 
-## Getting Started
+[**SpotiStats**](spotistats-lyart.vercel.app) is a service that allows you to explore your Spotify statistics in a simple, fast, and visually appealing way. It is built with [**Nextjs**](https://nextjs.org/) leveraging modern technologies to ensure a seamless and efficient user experience. This project is developed and maintained by [**Jose**](https://github.com/josesanfri) with a focus on intuitive design, performance, and scalability.
 
-First, run the development server:
+This project uses the following technologies:
 
+- [**Next.js 15 App Router**](https://nextjs.org/) - The React Framework for the Web.
+- [**Next.js Server Actions**](https://nextjs.org/docs/api-reference/server-actions) - Asynchronous functions that are executed on the server.
+- [**TailwindCSS**](https://tailwindcss.com) + [**shadcn/ui**](https://ui.shadcn.com) - Design System.
+- [**Prettier**](https://prettier.io) with [**prettier-plugin-tailwindcss**](https://github.com/tailwindlabs/prettier-plugin-tailwindcss) - Code Formatter.
+- [**Lucide Icons**](https://lucide.dev) - Beautiful SVG icons & logos for the web.
+
+> ⚠️ This is a own project.
+
+## 🚀 Getting Started
+
+**Requirements:**
+
+- [x] [Node.js](https://nodejs.org) (+v18.x) installed.
+- [x] [pnpm](https://pnpm.io) (v8+) installed.
+- [x] [Visual Studio Code](https://code.visualstudio.com) with the recommended extensions installed (ESLint, Prettier, Tailwind CSS IntelliSense).
+
+**Steps:**
+
+1. Create a Spotify app:
+[Spotify for developers](https://developer.spotify.com/)
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+# Copy your clientId and clientSecret
+
+# Set your redirectUri:
+http://localhost:3000/
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+2. Clone the repository:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+git clone https://github.com/josesanfri/SpotiStats.git
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+3. Install dependencies:
 
-## Learn More
+```bash
+# Install pnpm globally if you don't have it:
+npm install -g pnpm
 
-To learn more about Next.js, take a look at the following resources:
+# and install dependencies:
+pnpm install
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+4. Create a **.env** file with the following content:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+> 🚧 The environment variables must match the following [schema](https://github.com/pheralb/slug/blob/main/src/env/schema.mjs#L8).
 
-## Deploy on Vercel
+```bash
+# Next variables =>
+NEXT_PUBLIC_CLIENT_ID=
+NEXT_PUBLIC_SCOPES=
+NEXT_PUBLIC_REDIRECT_URI=
+NEXT_PUBLIC_CLIENT_SECRET=
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+7. Run:
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- Development server:
+
+```bash
+pnpm dev
+```
+
+and open [http://localhost:3000](http://localhost:3000) with your browser 🚀
+
+
+## ☁️ Deploy on Vercel
+
+- ✅ [spotistats-lyart.vercel.app](https://spotistats-lyart.vercel.app/).
