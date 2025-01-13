@@ -1,3 +1,4 @@
+"use client";
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -7,9 +8,15 @@ import {
 } from "@/components/ui/dropdown-menu";
 import Link from "next/link";
 import { Menu } from "lucide-react";
-import AuthBtn from "./auth-btn";
+import { getAccessToken } from "@/lib/authCookies";
+import { useSpotifyAuthCall } from "@/hooks/useSpotifyAuthCall";
+import { Button } from "./ui/button";
 
 export const ItemsMenuMobile = () => {
+        const token = getAccessToken();
+            const { login, logout } = useSpotifyAuthCall();
+        
+    
     return (
         <DropdownMenu>
             <DropdownMenuTrigger><Menu className="h-8 w-8" /></DropdownMenuTrigger>
@@ -18,7 +25,9 @@ export const ItemsMenuMobile = () => {
                 <DropdownMenuItem><Link href={'/artist'}>Top artists</Link></DropdownMenuItem>
                 <DropdownMenuItem><Link href={'/genre'}>Top genres</Link></DropdownMenuItem>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem><AuthBtn /></DropdownMenuItem>
+                <DropdownMenuItem>
+                    {token ? <Button onClick={logout}>Logout</Button> : <Button onClick={login}>Login</Button>}
+                </DropdownMenuItem>
             </DropdownMenuContent>
         </DropdownMenu>
     )
