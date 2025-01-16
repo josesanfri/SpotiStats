@@ -6,6 +6,7 @@ This project uses the following technologies:
 
 - [**Next.js 15 App Router**](https://nextjs.org/) - The React Framework for the Web.
 - [**Next.js Server Actions**](https://nextjs.org/docs/api-reference/server-actions) - Asynchronous functions that are executed on the server.
+- [**Auth.js v5**](https://authjs.dev/) - Authentication for the Web.
 - [**TailwindCSS**](https://tailwindcss.com) + [**shadcn/ui**](https://ui.shadcn.com) - Design System.
 - [**Prettier**](https://prettier.io) with [**prettier-plugin-tailwindcss**](https://github.com/tailwindlabs/prettier-plugin-tailwindcss) - Code Formatter.
 - [**Lucide Icons**](https://lucide.dev) - Beautiful SVG icons & logos for the web.
@@ -52,11 +53,12 @@ pnpm install
 > 🚧 The environment variables must match the following schema.
 
 ```bash
-# Next variables =>
-NEXT_PUBLIC_CLIENT_ID=
-NEXT_PUBLIC_SCOPES=
-NEXT_PUBLIC_REDIRECT_URI=
-NEXT_PUBLIC_CLIENT_SECRET=
+# Auth.js =>
+AUTH_SECRET=
+
+# Spotify Provider =>
+AUTH_SPOTIFY_ID=
+AUTH_SPOTIFY_SECRET=
 ```
 
 7. Run:
