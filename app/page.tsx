@@ -1,3 +1,4 @@
+import { auth } from "@/auth";
 import HomeCta from "@/components/home/home-cta";
 import HomeFeatures from "@/components/home/home-features";
 import HomeHero from "@/components/home/home-hero";
@@ -9,13 +10,15 @@ export const metadata: Metadata = {
     description: "Discover your stats on Spotify.",
 };
 
-export default function Home() {
+export default async function Home() {
+  const session = await auth();
+
   return (
     <main>
-      <HomeHero />
+      <HomeHero session={session} />
       <HomeFeatures />
       <HowItWorks />
-      <HomeCta />
+      <HomeCta session={session} />
     </main>
   );
 }

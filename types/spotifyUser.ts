@@ -1,4 +1,4 @@
-export type SpotifyUserType = {
+export interface SpotifyUserType {
     id: string;
     country: string;
     display_name: string;

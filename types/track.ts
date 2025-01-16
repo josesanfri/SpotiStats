@@ -1,4 +1,4 @@
-export type TrackType = {
+export interface TrackType {
     href: string;
     limit: number;
     next: string;
