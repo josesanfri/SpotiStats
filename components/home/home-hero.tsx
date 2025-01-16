@@ -1,13 +1,18 @@
 "use client";
 import { PlayCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useSpotifyAuthCall } from "@/hooks/useSpotifyAuthCall";
-import { getAccessToken } from "@/lib/authCookies";
 import { useRouter } from "next/navigation";
+import { login } from "@/lib/auth";
+import { Session } from "next-auth";
 
-const HomeHero = () => {
-    const { login } = useSpotifyAuthCall();
-    const token = getAccessToken();
+interface HomeHeroProps {
+    session: Session | null;
+}
+
+const HomeHero: React.FC<HomeHeroProps> = ({ session }) => {
+    const handleClick = async () => {
+        await login("spotify");
+    };
     const router = useRouter();
 
     return (
@@ -21,12 +26,7 @@ const HomeHero = () => {
                 detailed analytics.
             </p>
 
-            {!token ? (
-                <Button size="lg" className="mt-4" onClick={login}>
-                    <PlayCircle className="mr-2 h-5 w-5" />
-                    Get started
-                </Button>
-            ) : (
+            {session ? (
                 <Button
                     size="lg"
                     className="mt-4"
@@ -34,6 +34,11 @@ const HomeHero = () => {
                         router.push("/profile");
                     }}
                 >
+                    <PlayCircle className="mr-2 h-5 w-5" />
+                    See your stats
+                </Button>
+            ) : (
+                <Button size="lg" className="mt-4" onClick={handleClick}>
                     <PlayCircle className="mr-2 h-5 w-5" />
                     Get started
                 </Button>

@@ -3,8 +3,10 @@ import ToggleTheme from "./toogle-theme";
 import ItemsMenuMobile from "./items-menu-mobile";
 import Link from "next/link";
 import Image from "next/image";
+import { auth } from "@/auth";
 
-const Header = () => {
+const Header = async() => {
+    const session = await auth();
     return (
         <nav className="w-full z-20 top-0 start-0 border-b">
             <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
@@ -21,10 +23,10 @@ const Header = () => {
                 </section>
                 <section className="flex items-center justify-between gap-1">
                     <div className="hidden sm:flex">
-                        <MenuList />
+                        <MenuList session={session}/>
                     </div>
                     <div className="flex sm:hidden">
-                        <ItemsMenuMobile />
+                        <ItemsMenuMobile session={session}/>
                     </div>
                     <ToggleTheme />
                 </section>

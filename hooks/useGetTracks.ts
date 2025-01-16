@@ -1,24 +1,6 @@
 import useSWR from "swr";
-import axios from "axios";
 import { TrackType } from "@/types/track";
-import { getAccessToken } from "@/lib/authCookies";
-
-// Fetcher genérico para solicitudes autenticadas
-const fetcher = async (url: string) => {
-    const token = getAccessToken();
-
-    if (!token) {
-        throw new Error("Login required to fetch data");
-    }
-
-    const response = await axios.get(url, {
-        headers: {
-            Authorization: `Bearer ${token}`,
-        },
-    });
-
-    return response.data;
-};
+import { fetcher } from "@/lib/fetcher";
 
 export function useGetTracks(
     timeRange: "short_term" | "medium_term" | "long_term"

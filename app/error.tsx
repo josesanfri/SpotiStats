@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { HomeIcon } from "lucide-react";
 import Link from "next/link";
 
-const ErrorPage = () => {
+export default function ErrorPage() {
     return (
         <div className="min-h-[80vh] flex flex-col items-center justify-center p-4">
             <div className="flex flex-col items-center text-center space-y-8">
@@ -39,5 +39,3 @@ const ErrorPage = () => {
         </div>
     );
 };
-
-export default ErrorPage;

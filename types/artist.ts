@@ -1,4 +1,4 @@
-export type ArtistType = {
+export interface ArtistType {
     href: string;
     limit: number;
     next: string;

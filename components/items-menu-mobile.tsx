@@ -1,4 +1,3 @@
-"use client";
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -8,29 +7,42 @@ import {
 } from "@/components/ui/dropdown-menu";
 import Link from "next/link";
 import { Menu } from "lucide-react";
-import { getAccessToken } from "@/lib/authCookies";
-import { useSpotifyAuthCall } from "@/hooks/useSpotifyAuthCall";
-import { Button } from "./ui/button";
+import LogoutBtn from "./logout-btn";
+import LoginBtn from "./login-btn";
+import { Session } from "next-auth";
 
-export const ItemsMenuMobile = () => {
-        const token = getAccessToken();
-            const { login, logout } = useSpotifyAuthCall();
-        
-    
+interface ItemsMenuMobileProps {
+    session: Session | null;
+}
+
+export const ItemsMenuMobile: React.FC<ItemsMenuMobileProps> = ({ session }) => {
     return (
         <DropdownMenu>
-            <DropdownMenuTrigger><Menu className="h-8 w-8" /></DropdownMenuTrigger>
+            <DropdownMenuTrigger>
+                <Menu className="h-8 w-8" />
+            </DropdownMenuTrigger>
             <DropdownMenuContent>
-                <DropdownMenuItem><Link href={'/track'}>Top tracks</Link></DropdownMenuItem>
-                <DropdownMenuItem><Link href={'/artist'}>Top artists</Link></DropdownMenuItem>
-                <DropdownMenuItem><Link href={'/genre'}>Top genres</Link></DropdownMenuItem>
+                <DropdownMenuItem>
+                    <Link href={"/track"}>Top tracks</Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem>
+                    <Link href={"/artist"}>Top artists</Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem>
+                    <Link href={"/genre"}>Top genres</Link>
+                </DropdownMenuItem>
+                {session && (
+                    <DropdownMenuItem>
+                        <Link href={"/profile"}>Profile</Link>
+                    </DropdownMenuItem>
+                )}
                 <DropdownMenuSeparator />
                 <DropdownMenuItem>
-                    {token ? <Button onClick={logout}>Logout</Button> : <Button onClick={login}>Login</Button>}
+                    {session ? <LogoutBtn /> : <LoginBtn />}
                 </DropdownMenuItem>
             </DropdownMenuContent>
         </DropdownMenu>
-    )
-}
+    );
+};
 
 export default ItemsMenuMobile;

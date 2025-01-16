@@ -1,13 +1,16 @@
 "use client";
 import { Button } from "@/components/ui/button";
-import { useSpotifyAuthCall } from "@/hooks/useSpotifyAuthCall";
-import { getAccessToken } from "@/lib/authCookies";
-import { useRouter } from "next/navigation";
+import { login } from "@/lib/auth";
+import { Session } from "next-auth";
 
-const HomeCta = () => {
-    const { login } = useSpotifyAuthCall();
-    const token = getAccessToken();
-    const router = useRouter();
+interface HomeCtaProps {
+    session: Session | null;
+}
+
+const HomeCta: React.FC<HomeCtaProps> = ({ session }) => {
+    const handleClick = async () => {
+        await login("spotify");
+    };
 
     return (
         <section className="px-4 lg:px-8 py-20 bg-muted/50">
@@ -18,18 +21,8 @@ const HomeCta = () => {
                 <p className="text-xl text-muted-foreground max-w-[600px]">
                     Join now and get unique insights on your favourite music.
                 </p>
-                {!token ? (
-                    <Button size="lg" className="mt-4" onClick={login}>
-                        Get started
-                    </Button>
-                ) : (
-                    <Button
-                        size="lg"
-                        className="mt-4"
-                        onClick={() => {
-                            router.push("/profile");
-                        }}
-                    >
+                {!session && (
+                    <Button size="lg" className="mt-4" onClick={handleClick}>
                         Get started
                     </Button>
                 )}
