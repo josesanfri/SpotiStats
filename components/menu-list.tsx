@@ -38,46 +38,43 @@ interface MenuListProps {
 }
 
 const MenuList: React.FC<MenuListProps> = ({ session }) => {
-
     return (
         <NavigationMenu>
             <NavigationMenuList>
-                <NavigationMenuItem>
-                    <ul className="flex items-center space-x-2 px-4">
-                        {menu.map((item) => (
-                            <li key={item.title}>
-                                <Link href={item.href} legacyBehavior passHref>
-                                    <NavigationMenuLink
-                                        className={navigationMenuTriggerStyle()}
-                                    >
-                                        {item.title}
-                                    </NavigationMenuLink>
-                                </Link>
-                            </li>
-                        ))}
-                        {session ? (
-                            <DropdownMenu>
-                                <DropdownMenuTrigger
-                                    asChild
-                                    className="inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground h-9 w-9 p-2 rounded-full"
-                                >
-                                    <User />
-                                </DropdownMenuTrigger>
-                                <DropdownMenuContent>
-                                    <DropdownMenuItem>
-                                        <Link href={"/profile"}>Profile</Link>
-                                    </DropdownMenuItem>
-                                    <DropdownMenuSeparator />
-                                    <DropdownMenuItem>
-                                        <LogoutBtn />
-                                    </DropdownMenuItem>
-                                </DropdownMenuContent>
-                            </DropdownMenu>
-                        ) : (
-                            <LoginBtn />
-                        )}
-                    </ul>
-                </NavigationMenuItem>
+                {menu.map((item) => (
+                    <NavigationMenuItem key={item.title}>
+                        <Link href={item.href} legacyBehavior passHref>
+                            <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+                                {item.title}
+                            </NavigationMenuLink>
+                        </Link>
+                    </NavigationMenuItem>
+                ))}
+                {session ? (
+                    <NavigationMenuItem>
+                        <DropdownMenu>
+                            <DropdownMenuTrigger
+                                asChild
+                                className="inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground h-9 w-9 p-2 rounded-full"
+                            >
+                                <User />
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent>
+                                <DropdownMenuItem>
+                                    <Link href={"/profile"}>Profile</Link>
+                                </DropdownMenuItem>
+                                <DropdownMenuSeparator />
+                                <DropdownMenuItem>
+                                    <LogoutBtn />
+                                </DropdownMenuItem>
+                            </DropdownMenuContent>
+                        </DropdownMenu>
+                    </NavigationMenuItem>
+                ) : (
+                    <NavigationMenuItem>
+                        <LoginBtn />
+                    </NavigationMenuItem>
+                )}
             </NavigationMenuList>
         </NavigationMenu>
     );

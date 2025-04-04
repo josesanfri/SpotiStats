@@ -1,11 +1,10 @@
 import { Suspense } from "react";
 import Fallback from "@/components/ui/fallback";
 import UserProfile from "./components/user-profile";
-import ResumeCard from "./components/resume-card";
 import RecentlyPlayedTable from "./components/recently-played-table";
 import { Metadata } from "next";
-import { auth } from "@/auth";
-import { redirect } from "next/navigation";
+import { getUser, getUserRecentlyPlayed } from "@/hooks/server/spotifyService";
+import { getAccessToken } from "@/lib/auth";
 
 export const metadata: Metadata = {
     title: "Profile - SpotiStats",
@@ -13,14 +12,17 @@ export const metadata: Metadata = {
 };
 
 export default async function ProfilePage() {
-    const session = await auth();
-    if (!session) return redirect("/");
+    const token = await getAccessToken();
+    if (!token) throw new Error("Unauthorized");
+
+    const user = await getUser(token);
+    const recentlyPlayed = await getUserRecentlyPlayed(token);
+
     return (
         <main>
             <Suspense fallback={<Fallback />}>
-                <UserProfile />
-                <ResumeCard />
-                <RecentlyPlayedTable />
+                <UserProfile user={user} />
+                <RecentlyPlayedTable recentlyPlayed={recentlyPlayed} />
             </Suspense>
         </main>
     );

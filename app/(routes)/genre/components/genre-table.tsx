@@ -1,110 +1,47 @@
 "use client";
+
 import { useState, useEffect } from "react";
-import {
-    Table,
-    TableBody,
-    TableCaption,
-    TableCell,
-    TableRow,
-} from "@/components/ui/table";
-import { useGetArtists } from "@/hooks/useGetArtists";
-import { Info } from "lucide-react";
-import { Progress } from "@/components/ui/progress";
-import { ArtistType } from "@/types/artist";
+import GenreHeader from "./genre-header";
+import GenreList from "./genre-list";
+import { useGetArtists } from "@/hooks/client/useSpotifyClient";
 import { SkeletonTable } from "@/components/skeleton-table";
-import TimeRangeSelector from "@/components/time-range-selector";
+import { getGenreCounts } from "@/lib/getGenreCounts";
+import { Genre } from "@/types/spotify";
+import { useRouter } from "next/navigation";
 
-const GenreTable = () => {
-    const [timeRange, setTimeRange] = useState<
-        "short_term" | "medium_term" | "long_term"
-    >("short_term");
-    const [genreData, setGenreData] = useState<
-        { genre: string; count: number }[]
-    >([]);
-    const [maxCount, setMaxCount] = useState<number>(0);
+interface GenresTableProps {
+    initialData?: Genre[];
+}
 
-    const { data, loading, error } = useGetArtists(timeRange);
+const GenreTable = ({ initialData }: GenresTableProps) => {
+    const [timeRange, setTimeRange] = useState<"short_term" | "medium_term" | "long_term">("short_term");
+    const [genreData, setGenreData] = useState<Genre[]>(initialData || []);
+    const [maxCount, setMaxCount] = useState<number>(initialData ? Math.max(...initialData.map((item) => item.count)) : 0);
+    const { data, loading, error } = useGetArtists(timeRange, initialData);
+    const router = useRouter();
 
-    // Calculate genre when data is loaded
     useEffect(() => {
-        if (!loading && data) {
+        if (!loading && data && !Array.isArray(data)) {
             const genreCounts = getGenreCounts(data.items);
             setGenreData(genreCounts);
-
-            const max = Math.max(...genreCounts.map((item) => item.count));
-            setMaxCount(max);
+            setMaxCount(Math.max(...genreCounts.map((item) => item.count)));
         }
     }, [loading, data]);
-
-    // Count Genres
-    const getGenreCounts = (artists: ArtistType["items"]) => {
-        const genreCountMap: { [key: string]: number } = {};
-
-        artists.forEach((artist) => {
-            artist.genres.forEach((genre) => {
-                genreCountMap[genre] = (genreCountMap[genre] || 0) + 1;
-            });
-        });
-
-        return Object.entries(genreCountMap)
-            .map(([genre, count]) => ({ genre, count }))
-            .sort((a, b) => b.count - a.count);
-    };
-
-    const generateTableRows = () => {
-        return genreData.map((genre, index) => (
-            <TableRow key={index}>
-                <TableCell className="w-2/5">
-                    <span className="font-bold">{index + 1}.</span>{" "}
-                    {genre.genre}
-                </TableCell>
-                <TableCell className="w-3/5">
-                    <Progress
-                        value={(genre.count / maxCount) * 100}
-                        aria-label={`${genre.count} tracks`}
-                        className="h-4 w-full bg-gray-200 dark:bg-gray-700"
-                    />
-                </TableCell>
-            </TableRow>
-        ));
-    };
-
+    
     return (
         <section className="p-4 mx-auto sm:max-w-4xl md:max-w-6xl">
             {!loading && data && (
                 <>
-                    <section>
-                        <h1 className="text-2xl sm:text-3xl font-bold">
-                            Top Genres -{" "}
-                            {
-                                {
-                                    short_term: "Last Month",
-                                    medium_term: "Last 6 Months",
-                                    long_term: "Last Year",
-                                }[timeRange]
-                            }
-                        </h1>
-                        <TimeRangeSelector
-                            timeRange={timeRange}
-                            onTimeRangeChange={setTimeRange}
-                        />
-                    </section>
-                    <Table className="mt-3">
-                        <TableCaption>
-                            <p className="flex items-center place-content-center text-xs gap-2 px-4">
-                                <Info className="h-4 w-4" />
-                                Checkout your most listened genres.
-                            </p>
-                        </TableCaption>
-                        <TableBody>{generateTableRows()}</TableBody>
-                    </Table>
+                    <GenreHeader
+                        timeRange={timeRange}
+                        setTimeRange={setTimeRange}
+                    />
+                    <GenreList genreData={genreData} maxCount={maxCount} />
                 </>
             )}
-            {loading && (
-                <SkeletonTable />
-            )}
+            {loading && <SkeletonTable />}
             {error && (
-                <p className="text-red-500 text-center mt-4">Error: {error}</p>
+                router.push("/error")
             )}
         </section>
     );

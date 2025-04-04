@@ -2,8 +2,9 @@ import { Suspense } from "react";
 import Fallback from "@/components/ui/fallback";
 import TracksTable from "./components/tracks-table";
 import { Metadata } from "next";
-import { auth } from "@/auth";
-import { redirect } from "next/navigation";
+import { getAccessToken } from "@/lib/auth";
+import { Track } from "@/types/spotify";
+import { getUserTopTracks } from "@/hooks/server/spotifyService";
 
 export const metadata: Metadata = {
     title: "Top Tracks - SpotiStats",
@@ -11,12 +12,15 @@ export const metadata: Metadata = {
 };
 
 export default async function Page() {
-    const session = await auth();
-    if (!session) return redirect("/");
+    const token = await getAccessToken();
+    if (!token) throw new Error("Unauthorized");
+
+    const data: Track | null = await getUserTopTracks(token, "short_term");
+
     return (
         <main>
             <Suspense fallback={<Fallback />}>
-                <TracksTable />
+                <TracksTable initialData={data} />
             </Suspense>
         </main>
     );
