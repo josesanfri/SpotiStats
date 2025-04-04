@@ -5,11 +5,10 @@ import { HomeIcon } from "lucide-react";
 import Link from "next/link";
 
 interface ErrorProps {
-    error: Error & { digest?: string }
     reset: () => void
   }
 
-export default function ErrorPage({ error, reset }: ErrorProps) {
+export default function ErrorPage({ reset }: ErrorProps) {
     return (
         <div className="min-h-[80vh] flex flex-col items-center justify-center p-4">
             <div className="flex flex-col items-center text-center space-y-8">

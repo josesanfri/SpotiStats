@@ -19,7 +19,7 @@ export default function ArtistsTable({ initialData }: ArtistsTableProps) {
             {!loading && data && (
                 <>
                     <ArtistHeader timeRange={timeRange} onTimeRangeChange={setTimeRange} />
-                    <ArtistList data={data} />
+                    {data && !Array.isArray(data) && <ArtistList data={data} />}
                 </>
             )}
             {loading && <SkeletonTable />}
