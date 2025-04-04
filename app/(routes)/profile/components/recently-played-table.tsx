@@ -1,4 +1,3 @@
-"use client";
 import {
     Table,
     TableCaption,
@@ -7,11 +6,15 @@ import {
     TableRow,
 } from "@/components/ui/table";
 import Image from "next/image";
-import { useGetRecentlyPlayed } from "@/hooks/useGetRecentlyPlayed";
 import { Info } from "lucide-react";
+import { TrackHistory } from "@/types/spotify";
 
-const RecentlyPlayedTable = () => {
-    const { data: tracks, loading } = useGetRecentlyPlayed();
+interface RecentlyPlayedProps {
+    recentlyPlayed: TrackHistory | null;
+}
+
+const RecentlyPlayedTable = ({ recentlyPlayed }: RecentlyPlayedProps) => {
+    const tracks = recentlyPlayed?.items || [];
 
     return (
         <section className="p-4 mx-auto sm:max-w-4xl md:max-w-6xl">
@@ -20,7 +23,7 @@ const RecentlyPlayedTable = () => {
                     Recently Played
                 </h1>
             </article>
-            {!loading && tracks && (
+            {tracks.length > 0 ? (
                 <Table className="mt-3">
                     <TableCaption>
                         <p className="flex items-center place-content-center text-xs gap-2 px-4">
@@ -30,8 +33,8 @@ const RecentlyPlayedTable = () => {
                         </p>
                     </TableCaption>
                     <TableBody>
-                        {tracks?.items.map((track, index) => (
-                            <TableRow key={track.track.id+index}>
+                        {tracks.map((track, index) => (
+                            <TableRow key={track.track.id + index}>
                                 <TableCell className="flex items-center gap-2">
                                     <p className="font-bold">{index + 1}</p>
                                     <Image
@@ -52,6 +55,8 @@ const RecentlyPlayedTable = () => {
                         ))}
                     </TableBody>
                 </Table>
+            ) : (
+                <p>No recently played tracks available.</p>
             )}
         </section>
     );

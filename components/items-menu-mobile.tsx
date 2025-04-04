@@ -18,8 +18,8 @@ interface ItemsMenuMobileProps {
 export const ItemsMenuMobile: React.FC<ItemsMenuMobileProps> = ({ session }) => {
     return (
         <DropdownMenu>
-            <DropdownMenuTrigger>
-                <Menu className="h-8 w-8" />
+            <DropdownMenuTrigger asChild>
+                <Menu className="h-8 w-8 cursor-pointer" />
             </DropdownMenuTrigger>
             <DropdownMenuContent>
                 <DropdownMenuItem>

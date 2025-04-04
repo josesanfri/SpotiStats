@@ -2,8 +2,10 @@ import { Suspense } from "react";
 import GenreTable from "./components/genre-table";
 import Fallback from "@/components/ui/fallback";
 import { Metadata } from "next";
-import { auth } from "@/auth";
-import { redirect } from "next/navigation";
+import { getUserTopArtists } from "@/hooks/server/spotifyService";
+import { getAccessToken } from "@/lib/auth";
+import { Artist, Genre } from "@/types/spotify";
+import { getGenreCounts } from "@/lib/getGenreCounts";
 
 export const metadata: Metadata = {
     title: "Top Genres - SpotiStats",
@@ -11,12 +13,16 @@ export const metadata: Metadata = {
 };
 
 export default async function Page() {
-    const session = await auth();
-    if (!session) return redirect("/");
+    const token = await getAccessToken();
+    if (!token) throw new Error("Unauthorized");
+
+    const data: Artist | null = await getUserTopArtists(token, "short_term");
+    const genreCounts: Genre[] | null = data ? getGenreCounts(data.items) : [];
+
     return (
         <main>
             <Suspense fallback={<Fallback />}>
-                <GenreTable />
+                <GenreTable initialData={genreCounts} />
             </Suspense>
         </main>
     );

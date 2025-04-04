@@ -1,15 +1,15 @@
-"use client";
-import { Button } from "./ui/button";
-import { login } from "@/lib/auth";
-
-const LoginBtn = () => {
-    const handleClick = async () => {
-        await login("spotify");
-    }
-
-    return (
-        <Button onClick={handleClick}>Login</Button>
-    );
-};
-
-export default LoginBtn;
+import { signIn } from "@/auth"
+import { Button } from "@/components/ui/button"
+ 
+export default function LoginBtn() {
+  return (
+    <form
+      action={async () => {
+        "use server"
+        await signIn("spotify")
+      }}
+    >
+      <Button type="submit">Login</Button>
+    </form>
+  )
+} 

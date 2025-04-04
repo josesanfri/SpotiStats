@@ -18,6 +18,7 @@ const Footer = () => {
                 <div className="sm:flex sm:items-center sm:justify-between">
                     <article className="flex items-center mb-4 sm:mb-0 space-x-3">
                         <a
+                            aria-label="Jose Sánchez Portfolio"
                             href="htttps://portfolio-jsf.vercel.app"
                             className="hover:underline"
                         >

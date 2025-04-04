@@ -1,15 +1,17 @@
-"use client";
 import { Button } from "./ui/button";
-import { logout } from "@/lib/auth";
-
+import { signOut } from "@/auth"
+ 
 const LogoutBtn = () => {
-    const handleClick = async () => {
-        await logout();
-    }
-
-    return (
-        <Button onClick={handleClick}>Logout</Button>
-    );
-};
+  return (
+      <form
+        action={async () => {
+          "use server"
+          await signOut()
+        }}
+      >
+        <Button type="submit">Logout</Button>
+      </form>
+  )
+}
 
 export default LogoutBtn;

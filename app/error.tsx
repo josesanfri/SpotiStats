@@ -1,10 +1,15 @@
 "use client";
-
 import { Button } from "@/components/ui/button";
+import { ResetIcon } from "@radix-ui/react-icons";
 import { HomeIcon } from "lucide-react";
 import Link from "next/link";
 
-export default function ErrorPage() {
+interface ErrorProps {
+    error: Error & { digest?: string }
+    reset: () => void
+  }
+
+export default function ErrorPage({ error, reset }: ErrorProps) {
     return (
         <div className="min-h-[80vh] flex flex-col items-center justify-center p-4">
             <div className="flex flex-col items-center text-center space-y-8">
@@ -22,17 +27,21 @@ export default function ErrorPage() {
                         ¡Oops! Something has gone wrong
                     </h1>
                     <p className="text-muted-foreground max-w-[500px]">
-                        Sorry, an unexpected error has occurred. Please try
-                        again or return to the main page.
+                        An unexpected error occurred. Please try again later.
                     </p>
                 </div>
 
                 <div className="flex flex-wrap items-center justify-center gap-4">
-                    <Button asChild>
-                        <Link href="/">
+                    <Button>
+                        <Link className="flex flex-row items-center" href="/">
                             <HomeIcon className="mr-2 h-4 w-4" />
                             Back to home
                         </Link>
+                    </Button>
+
+                    <Button className="flex flex-row items-center" onClick={reset}>
+                            <ResetIcon className="mr-2 h-4 w-4" />
+                            Try again
                     </Button>
                 </div>
             </div>
